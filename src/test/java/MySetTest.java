@@ -3,14 +3,14 @@ import org.junit.jupiter.api.Test;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Random;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MySetTest {
 
     MySet<Integer> instance = new MySet<>();
-    MySet<Integer> msDeserialized = null;
+    MySet<String> msDeserialized = null;
 
     public void setUp(){
         try {
@@ -18,8 +18,8 @@ class MySetTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        for(int i = 0; i< 11; i++){
-            instance.add(new Random().nextInt(12));
+        for(int i = 1; i<= 10; i++){
+            instance.add(i);
         }
     }
 
@@ -37,22 +37,23 @@ class MySetTest {
             System.out.println("Exception:  " + ex);
         }
         assertTrue(Files.exists(Path.of("MySet-Serialized.obj")));
+
     }
 
     @Test
     public void deSerializeTest(){
+
         try (
-                FileInputStream fis = new FileInputStream("MySet-Serialized.obj");
+                FileInputStream fis = new FileInputStream("DeserializingTest.obj");
                 ObjectInputStream ois = new ObjectInputStream(fis))
         {
-            msDeserialized = (MySet<Integer>) ois.readObject();
+            msDeserialized = (MySet<String>) ois.readObject();
 
         }
         catch (IOException | ClassNotFoundException ex) {
             System.out.println("Exception:  " + ex);
         }
-
-        assertTrue(msDeserialized.isEmpty());
+        assertEquals(msDeserialized.size(), 10);
     }
 
 }
